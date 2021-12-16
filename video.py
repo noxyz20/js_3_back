@@ -9,10 +9,12 @@ class Video:
         self.video = video
         self.frame_array = []
         self.film = []
-        os.makedirs("tmp/" + self.name + "/keyframes")
+        self.progress = 0
+        os.makedirs("tmp/" + self.name + "/keyframes", exist_ok=True)
 
     def treatement(self):
         cap = cv2.VideoCapture(self.video)
+        length_video = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
         diff_array_value = []
         ret, prev_frame = cap.read()
         self.film.append(prev_frame)
@@ -24,6 +26,7 @@ class Video:
                 diff_array_value.append(non_zero_count)
                 self.film.append(curr_frame)
                 prev_frame = curr_frame
+                self.progress += (1/(2*length_video))*100
 
         p_frame_thresh = max(diff_array_value) - 0.04 * max(diff_array_value)
 
@@ -41,6 +44,7 @@ class Video:
                 #    if (j < len(self.film)):
                 #        self.frame_array.append(j)
             stopper += 1
+            self.progress += (1 / (2 * length_video))*100
 
         self.size = (len(self.film[0][0]), len(self.film[0]))
         return self.frame_array
@@ -68,3 +72,6 @@ class Video:
             return True
 
         return False
+
+    def getProgress(self):
+        return self.progress
