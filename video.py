@@ -1,11 +1,12 @@
 import cv2
 import numpy as np
 import os
+import uuid
 
 class Video:
 
-    def __init__(self, name, video):
-        self.name = name
+    def __init__(self, video):
+        self.name = str(uuid.uuid1())
         self.video = video
         self.frame_array = []
         self.film = []
@@ -47,7 +48,20 @@ class Video:
             self.progress += (1 / (2 * length_video))*100
 
         self.size = (len(self.film[0][0]), len(self.film[0]))
-        return self.frame_array
+
+        returned_value = {}
+        returned_value['data'] = []
+        returned_value['name'] = self.name
+
+        for frame in self.frame_array:
+            returned_value['data'].append({
+                'id': frame,
+                'time_code': frame/30,
+                'img': "tmp/" + self.name + "/keyframes/" + str(frame) + ".jpg",
+                'checked': True
+            })
+
+        return returned_value
 
     def save_ressource(self, keyframes=[]):
         data = []
@@ -65,7 +79,7 @@ class Video:
                         data.append(j)
 
         if len(data) > 0:
-            out = cv2.VideoWriter('tmp/' + self.name + '/output.avi', cv2.VideoWriter_fourcc(*'XVID'), 30, self.size)
+            out = cv2.VideoWriter('tmp/' + self.name + '/output.mp4', cv2.VideoWriter_fourcc(*'mp4v'), 30, self.size)
             for image in data:
                 out.write(self.film[image])
             out.release()
@@ -75,3 +89,5 @@ class Video:
 
     def getProgress(self):
         return self.progress
+
+    
