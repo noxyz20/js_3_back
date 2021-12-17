@@ -3,10 +3,12 @@ from werkzeug.utils import secure_filename
 from flask_cors import CORS
 import os
 from video import Video
+import json
 
 app = Flask(__name__)
 cors = CORS()
 cors.init_app(app, resource={r"/api/*": {"origins": "*"}})
+app.config.update(SECRET_KEY=os.urandom(24))
 
 @app.route('/upload', methods=['POST'])
 def upload():
@@ -18,14 +20,19 @@ def upload():
     
     frame_array = curr_video.treatement()
     
-    (session['name'], session['video'], session['frame'], session['film']) = curr_video.export()
+    name, video, frame = curr_video.export()
+    
+    session['name'] = json.dumps(name)
+    session['video'] = json.dumps(video)
+    session['frame'] = json.dumps(frame)
+
     return str(frame_array)
 
 @app.route('/save', methods=['GET'])
 def save():
     keyframes = request.args.get('keyframes')
 
-    curr_video = Video(session['video'], session['name'], session['frame'], session['film'])
+    curr_video = Video(session.get('video'), session.get('name'), session.get('frame'), session['film'])
     curr_video.save_ressource(keyframes)
 
 if __name__ == '__main__':

@@ -6,11 +6,11 @@ import json
 
 class Video:
 
-    def __init__(self, video):
-        self.name = str(uuid.uuid1())
+    def __init__(self, video, name=uuid.uuid1(), frame_array=[], film=[]):
+        self.name = str(name)
         self.video = video
-        self.frame_array = []
-        self.film = []
+        self.frame_array = frame_array
+        self.film = film
         self.progress = 0
         os.makedirs("tmp/" + self.name + "/keyframes", exist_ok=True)
 
@@ -88,6 +88,7 @@ class Video:
         return False
 
     def add_manualy_keyFrame_from_time_code(self, time_code):
+        """inutile"""
         time_code = int(time_code) * 30
         img = self.film[time_code]
         cv2.imwrite("tmp/" + self.name + "/keyframes/" + str(time_code) + ".jpg", img)
@@ -101,6 +102,6 @@ class Video:
         return self.progress
 
     def export(self):
-        return (json.encode(self.name), json.encode(self.video), json.encode(self.frame_array), json.encode(self.film))
+        return (self.name, self.video, self.frame_array)
 
     
