@@ -20,19 +20,20 @@ def upload():
     
     frame_array = curr_video.treatement()
     
-    name, video, frame = curr_video.export()
+    name, video, frame, size = curr_video.export()
     
     session['name'] = json.dumps(name)
     session['video'] = json.dumps(video)
     session['frame'] = json.dumps(frame)
+    session['size'] = json.dumps(size)
 
     return str(frame_array)
 
 @app.route('/save', methods=['GET'])
 def save():
     keyframes = request.args.get('keyframes')
-
-    curr_video = Video(session.get('video'), session.get('name'), session.get('frame'), session['film'])
+    
+    curr_video = Video(session.get('video'), session.get('name'), session.get('frame'))
     curr_video.save_ressource(keyframes)
 
 if __name__ == '__main__':
