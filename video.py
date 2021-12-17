@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 import os
 import uuid
+import json
 
 class Video:
 
@@ -100,6 +101,6 @@ class Video:
         return self.progress
 
     def export(self):
-        return (self.name, self.video, self.frame_array, self.film)
+        return (json.encode(self.name), json.encode(self.video), json.encode(self.frame_array), json.encode(self.film))
 
     
