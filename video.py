@@ -51,7 +51,6 @@ class Video:
 
         returned_value = {}
         returned_value['data'] = []
-        returned_value['name'] = self.name
 
         for frame in self.frame_array:
             returned_value['data'].append({
@@ -86,6 +85,10 @@ class Video:
             return True
 
         return False
+
+    def from_time_code(self, time_code):
+        time_code = int(time_code) * 30
+        return "tmp/" + self.name + "/keyframes/" + str(time_code) + ".jpg"
 
     def getProgress(self):
         return self.progress
