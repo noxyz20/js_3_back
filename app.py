@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, session
+from flask import Flask, request, jsonify, session, send_from_directory
 from werkzeug.utils import secure_filename
 from flask_cors import CORS
 import os
@@ -32,8 +32,13 @@ def upload():
 def save():
     keyframes = request.args.get('keyframes')
 
-    curr_video = Video(session.get('video'), session.get('name'), session.get('frame'), session['film'])
+    curr_video = Video(session.get('video'), session.get('name'), session.get('frame'))
     curr_video.save_ressource(keyframes)
+
+@app.route("/src/<path:filename>")
+def static_dir(filename):
+    print(filename)
+    return send_from_directory("",filename)
 
 if __name__ == '__main__':
     if not os.path.exists('./uploads'):
