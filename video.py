@@ -86,11 +86,20 @@ class Video:
 
         return False
 
+    def add_manualy_keyFrame_from_time_code(self, time_code):
+        time_code = int(time_code) * 30
+        img = self.film[time_code]
+        cv2.imwrite("tmp/" + self.name + "/keyframes/" + str(time_code) + ".jpg", img)
+        return "tmp/" + self.name + "/keyframes/" + str(time_code) + ".jpg"
+
     def from_time_code(self, time_code):
         time_code = int(time_code) * 30
         return "tmp/" + self.name + "/keyframes/" + str(time_code) + ".jpg"
 
     def getProgress(self):
         return self.progress
+
+    def export(self):
+        return (self.name, self.video, self.frame_array, self.film)
 
     
